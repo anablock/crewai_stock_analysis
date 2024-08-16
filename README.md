@@ -2,8 +2,6 @@
 
 ## Introduction
 
-
-
 * `python poetry main.py` to run the script
 
 
