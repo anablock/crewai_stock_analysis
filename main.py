@@ -49,7 +49,7 @@ class FinancialCrew:
 if __name__ == "__main__":
     print("## Welcome to Financial Analysis Crew")
     print('-------------------------------')
-    company = "Airship AI"
+    company = "Cingulate Inc"
 
     financial_crew = FinancialCrew(company)
     result = financial_crew.run()
