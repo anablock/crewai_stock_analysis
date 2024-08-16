@@ -3,4 +3,3 @@ flask-cors
 python-dotenv
 pydantic
 crewai
-python==3.10
