@@ -47,9 +47,8 @@ class FinancialCrew:
 
 
 if __name__ == "__main__":
-    print("## Welcome to Financial Analysis Crew")
     print('-------------------------------')
-    company = "Cisco Systems"
+    company = "Novo Nordisk"
 
     financial_crew = FinancialCrew(company)
     result = financial_crew.run()

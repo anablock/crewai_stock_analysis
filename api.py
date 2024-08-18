@@ -15,7 +15,7 @@ from stock_analysis_agents import StockAnalysisAgents
 from stock_analysis_tasks import StockAnalysisTasks
 from job_manager import append_event, jobs, jobs_lock, Job, Event
 from utils.logging import logger
-from crewai import Crew
+from crewai import Crew, CrewOutput
 from models import StockAnalysisRequest, StockAnalysisResponse, StockAnalysisReport
 
 load_dotenv()
@@ -24,6 +24,51 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})  # Allow CORS for all origins
 
 def kickoff_crew(job_id: str, company: str):
+    logger.info(f"Stock Analysis Crew for job {job_id} is starting")
+    try:
+        agents = StockAnalysisAgents()
+        tasks = StockAnalysisTasks()
+
+        research_analyst_agent = agents.research_analyst()
+        financial_analyst_agent = agents.financial_analyst()
+        investment_advisor_agent = agents.investment_advisor()
+
+        research_task = tasks.research(research_analyst_agent, company)
+        financial_task = tasks.financial_analysis(financial_analyst_agent)
+        filings_task = tasks.filings_analysis(financial_analyst_agent)
+        recommend_task = tasks.recommend(investment_advisor_agent)
+
+        crew = Crew(
+            agents=[research_analyst_agent, financial_analyst_agent, investment_advisor_agent],
+            tasks=[research_task, financial_task, filings_task, recommend_task],
+            verbose=True,
+        )
+
+        logger.info(f"Crew kickoff for job {job_id} starting")
+        result: CrewOutput = crew.kickoff()
+        logger.info(f"Crew kickoff for job {job_id} completed")
+        logger.debug(f"Raw results for job {job_id}: {result}")
+
+        # Convert results to StockAnalysisReport
+        report_dict = {
+            "research": result.tasks[0].output,
+            "financial_analysis": result.tasks[1].output,
+            "filings_analysis": result.tasks[2].output,
+            "recommendation": result.tasks[3].output
+        }
+        report = StockAnalysisReport(**report_dict)
+        
+        with jobs_lock:
+            jobs[job_id].status = 'COMPLETE'
+            jobs[job_id].result = json.dumps(report.dict())
+            append_event(job_id, "Stock analysis complete")
+        
+    except Exception as e:
+        logger.error(f"Error in kickoff_crew for job {job_id}: {e}", exc_info=True)
+        append_event(job_id, f"An error occurred: {str(e)}")
+        with jobs_lock:
+            jobs[job_id].status = 'ERROR'
+            jobs[job_id].result = str(e)
     logger.info(f"Stock Analysis Crew for job {job_id} is starting")
     try:
         agents = StockAnalysisAgents()
