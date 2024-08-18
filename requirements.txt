@@ -2,4 +2,4 @@ flask
 flask-cors
 python-dotenv
 pydantic
-crewai
+crewai==0.51.0
