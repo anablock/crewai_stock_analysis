@@ -48,7 +48,7 @@ class FinancialCrew:
 
 if __name__ == "__main__":
     print('-------------------------------')
-    company = "Ardmore Shipping Corporation"
+    company = "AST SpaceMobile, Inc."
 
     financial_crew = FinancialCrew(company)
     result = financial_crew.run()
