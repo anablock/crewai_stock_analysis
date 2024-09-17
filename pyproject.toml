@@ -2,7 +2,7 @@
 name = "stock-analysis-crew"
 version = "0.1.0"
 description = ""
-authors = ["João Moura <joaomdmoura@mgail.com>", "Brandon Hancock <brandon@brandonhancock.io>"]
+authors = ["João Moura <joaomdmoura@mgail.com>", "Brandon Hancock <brandon@brandonhancock.io>", "Vuk Dukic <vuk@anablock.com>"]
 
 [tool.poetry.dependencies]
 python = ">=3.10.0,<3.12"
