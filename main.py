@@ -48,9 +48,18 @@ class FinancialCrew:
 
 if __name__ == "__main__":
     print('-------------------------------')
-    company = "AST SpaceMobile, Inc."
+    company = "INtel"
 
     financial_crew = FinancialCrew(company)
     result = financial_crew.run()
     print("## Report for " + company)
     print(result)
+
+    # Create markdown content
+    markdown_content = f"## Report for {company}\n\n{result}"
+    
+    # Write to a markdown file
+    with open("financial_report.md", "w") as file:
+        file.write(markdown_content)
+    
+    print("Report saved to financial_report.md")
